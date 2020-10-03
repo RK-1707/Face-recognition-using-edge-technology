@@ -64,9 +64,6 @@ while True:
 			faceBlob = cv2.dnn.blobFromImage(cv2.resize(face,	(96, 96)), 1.0 / 255, (96, 96), (0, 0, 0), swapRB=True, crop=False)
 			embedder.setInput(faceBlob)
 			vec = embedder.forward()
-
-			# draw the bounding box of the face along with the associated probability
-			text = "Face Detected"
 			
 			cv2.rectangle(frame, (startX, startY), (endX, endY),
 				(0, 0, 255), 2)
