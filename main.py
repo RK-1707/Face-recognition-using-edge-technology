@@ -14,7 +14,6 @@ modelpath = "res10_300x300_ssd_iter_140000.caffemodel"
 detector = cv2.dnn.readNetFromCaffe(protopath, modelpath)
 
 # load our serialized face embedding model from disk and set the preferable target to MYRIAD
-print("[INFO] loading face recognizer...")
 embedder = cv2.dnn.readNetFromTorch("openface_nn4.small2.v1.t7") 
 
 # initialize the video stream
@@ -71,8 +70,6 @@ while True:
 			
 			cv2.rectangle(frame, (startX, startY), (endX, endY),
 				(0, 0, 255), 2)
-			cv2.putText(frame, text, (startX, y),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.45, (0, 0, 255), 2)
 
 	# update the FPS counter
 	fps.update()
