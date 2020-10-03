@@ -9,8 +9,8 @@ import os
 
 # load our serialized face detector from disk
 print("[INFO] loading face detector...")
-protopath = os.path( "deploy.prototxt" )
-modelpath = os.path ( "res10_300x300_ssd_iter_140000.caffemodel" )
+protopath = "deploy.prototxt"
+modelpath = "res10_300x300_ssd_iter_140000.caffemodel"
 detector = cv2.dnn.readNetFromCaffe(protopath, modelpath)
 
 # load our serialized face embedding model from disk and set the preferable target to MYRIAD
