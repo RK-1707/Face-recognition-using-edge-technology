@@ -9,14 +9,14 @@ import os
 
 # load our serialized face detector from disk
 print("[INFO] loading face detector...")
-protopath = os.path( "/face_detection_model/deploy.prototxt" )
-modelpath = os.path ( "/face_detection_model/res10_300x300_ssd_iter_140000.caffemodel" )
+protopath = os.path( "deploy.prototxt" )
+modelpath = os.path ( "res10_300x300_ssd_iter_140000.caffemodel" )
 detector = cv2.dnn.readNetFromCaffe(protopath, modelpath)
 #detector.setPreferableTarget(cv2.dnn.DNN_TARGET_MYRIAD)		(to be uncommented later) 
 
 # load our serialized face embedding model from disk and set the preferable target to MYRIAD
 print("[INFO] loading face recognizer...")
-embedder = cv2.dnn.readNetFromTorch("/face_embedding_model/ openface_nn4.small2.v1.t7")
+embedder = cv2.dnn.readNetFromTorch("openface_nn4.small2.v1.t7")
 #embedder.setPreferableTarget(cv2.dnn.DNN_TARGET_MYRIAD)		(to be uncommented later) 
 
 # initialize the video stream
@@ -87,7 +87,6 @@ while True:
 	if key == ord("q"):
 		break
 
-print(vec)
 # stop the timer and display FPS information
 fps.stop()
 print("[INFO] elasped time: {:.2f}".format(fps.elapsed()))
