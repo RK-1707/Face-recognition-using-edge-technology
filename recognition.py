@@ -1,9 +1,9 @@
 from imutils.video import VideoStream
 import numpy as np
 import time
-import os
 import imutils
 import cv2
+import pickle
 
 #For taking screenshots
 currentframe = 1
@@ -19,9 +19,9 @@ embedder = cv2.dnn.readNetFromTorch("face_embedding_model/openface_nn4.small2.v1
 
 # initialize the video stream
 vs = VideoStream(src=0).start()		
+print("Recognizing the person")
 
-print("Taking Pictures")
-while currentframe<301:
+while currentframe < 2:
     frame = vs.read()
 
 	# resize the frame to have a width of 600 pixels 
@@ -37,7 +37,7 @@ while currentframe<301:
 	# store output of detector model in detections
     detections = detector.forward()   
 
-	# loop over the detections /   Multiple face detection
+	# loop over the detections
     for i in range(0, detections.shape[2]):
 		# extract the confidence or probability associated with the prediction
         confidence = detections[0, 0, i, 2]
@@ -57,21 +57,24 @@ while currentframe<301:
                 continue
             
 			# construct a blob for the face ROI, then pass the blob through our face embedding model to obtain the 128-d quantification of the face
-            faceBlob = cv2.dnn.blobFromImage(cv2.resize(face, (96, 96)), 1.0 / 255, (96, 96), (0, 0, 0), swapRB=True, crop=False)
+            faceBlob = cv2.dnn.blobFromImage(cv2.resize(face,	(96, 96)), 1.0 / 255, (96, 96), (0, 0, 0), swapRB=True, crop=False)
             embedder.setInput(faceBlob)
-            vec = embedder.forward()            
+            vec = embedder.forward()  
             
-            #Make folder to store images if folder does not exist
-            if not os.path.exists('data'): 
-                os.makedirs('data')
+            time.sleep(2)
             
-            #Format and save images for dataset in the folder created
-            crop_img = frame[startY - 50:endY + 50, startX - 50:endX + 50]    #(startX, startY)---- Top Left corner of face
-            time.sleep(0.1)
+            #Take a screenshot  to send to the model
+            crop_img = frame[startY - 50:endY + 50, startX - 50:endX + 50]    #(startX, startY)---- Top Left corner of face       
             crop_img = cv2.resize(crop_img, (45 , 50))
-            name = './data/frame' + str(currentframe) + '.jpg'
-            cv2.imwrite(name, crop_img) 
             currentframe = currentframe + 1
-	
-print("Dataset complete")
+
+#importing the model
+recognizer = pickle.loads(open('Out/model', 'rb').read())
+
+img = np.reshape(crop_img,[1,45,50,3])
+
+#Predicting the person
+classes = recognizer.predict_classes(img)
+
+print("Output belongs to class", classes)
 vs.stop()
